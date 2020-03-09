@@ -18,30 +18,28 @@
 
 #include "minikin/Layout.h"
 
-#include <cmath>
-#include <iostream>
-#include <mutex>
-#include <string>
-#include <vector>
-
 #include <hb-icu.h>
 #include <hb-ot.h>
+
+#include <cmath>
+#include <iostream>
+#include <string>
+#include <vector>
 // #include <log/log.h>
 #include <unicode/ubidi.h>
 #include <unicode/utf16.h>
 #include <utils/LruCache.h>
-
-#include "minikin/Emoji.h"
-#include "minikin/HbUtils.h"
-#include "minikin/LayoutCache.h"
-#include "minikin/LayoutPieces.h"
-#include "minikin/Macros.h"
 
 #include "BidiUtils.h"
 #include "LayoutSplitter.h"
 #include "LayoutUtils.h"
 #include "LocaleListCache.h"
 #include "MinikinInternal.h"
+#include "minikin/Emoji.h"
+#include "minikin/HbUtils.h"
+#include "minikin/LayoutCache.h"
+#include "minikin/LayoutPieces.h"
+#include "minikin/Macros.h"
 
 namespace minikin {
 
@@ -78,7 +76,7 @@ float Layout::doLayoutRunCached(const U16StringPiece& textBuf, const Range& rang
         return 0.0f;  // ICU failed to retrieve the bidi run?
     }
     float advance = 0;
-    for (const auto[context, piece] : LayoutSplitter(textBuf, range, isRtl)) {
+    for (const auto [context, piece] : LayoutSplitter(textBuf, range, isRtl)) {
         // Hyphenation only applies to the start/end of run.
         const StartHyphenEdit pieceStartHyphen =
                 (piece.getStart() == range.getStart()) ? startHyphen : StartHyphenEdit::NO_EDIT;

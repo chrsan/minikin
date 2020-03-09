@@ -124,7 +124,9 @@ LocaleListCache::LocaleListCache() {
 }
 
 uint32_t LocaleListCache::getIdInternal(const std::string& locales) {
+#ifndef WASM_BUILD
     std::lock_guard<std::mutex> lock(mMutex);
+#endif
     const auto& it = mLocaleListLookupTable.find(locales);
     if (it != mLocaleListLookupTable.end()) {
         return it->second;
@@ -142,7 +144,9 @@ uint32_t LocaleListCache::getIdInternal(const std::string& locales) {
 }
 
 const LocaleList& LocaleListCache::getByIdInternal(uint32_t id) {
+#ifndef WASM_BUILD
     std::lock_guard<std::mutex> lock(mMutex);
+#endif
     MINIKIN_ASSERT(id < mLocaleLists.size(), "Lookup by unknown locale list ID.");
     return mLocaleLists[id];
 }

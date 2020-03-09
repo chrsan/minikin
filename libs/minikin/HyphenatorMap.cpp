@@ -47,20 +47,26 @@ HyphenatorMap::HyphenatorMap()
 
 void HyphenatorMap::addInternal(const std::string& localeStr, const Hyphenator* hyphenator) {
     const Locale locale(localeStr);
+#ifndef WASM_BUILD
     std::lock_guard<std::mutex> lock(mMutex);
+#endif
     // Overwrite even if there is already a fallback entry.
     mMap[locale.getIdentifier()] = hyphenator;
 }
 
 void HyphenatorMap::clearInternal() {
+#ifndef WASM_BUILD
     std::lock_guard<std::mutex> lock(mMutex);
+#endif
     mMap.clear();
 }
 void HyphenatorMap::addAliasInternal(const std::string& fromLocaleStr,
                                      const std::string& toLocaleStr) {
     const Locale fromLocale(fromLocaleStr);
     const Locale toLocale(toLocaleStr);
+#ifndef WASM_BUILD
     std::lock_guard<std::mutex> lock(mMutex);
+#endif
     auto it = mMap.find(toLocale.getIdentifier());
     if (it == mMap.end()) {
         // ALOGE("Target Hyphenator not found.");
@@ -72,7 +78,9 @@ void HyphenatorMap::addAliasInternal(const std::string& fromLocaleStr,
 
 const Hyphenator* HyphenatorMap::lookupInternal(const Locale& locale) {
     const uint64_t id = locale.getIdentifier();
+#ifndef WASM_BUILD
     std::lock_guard<std::mutex> lock(mMutex);
+#endif
     const Hyphenator* result = lookupByIdentifier(id);
     if (result != nullptr) {
         return result;  // Found with exact match.

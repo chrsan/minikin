@@ -18,29 +18,28 @@
 
 #include "minikin/LayoutCore.h"
 
+#include <hb-icu.h>
+#include <hb-ot.h>
+
 #include <cmath>
 #include <iostream>
-#include <mutex>
 #include <string>
 #include <vector>
 
-#include <hb-icu.h>
-#include <hb-ot.h>
 // #include <log/log.h>
 #include <unicode/ubidi.h>
 #include <unicode/utf16.h>
 #include <utils/LruCache.h>
 
+#include "BidiUtils.h"
+#include "LayoutUtils.h"
+#include "LocaleListCache.h"
+#include "MinikinInternal.h"
 #include "minikin/Emoji.h"
 #include "minikin/HbUtils.h"
 #include "minikin/LayoutCache.h"
 #include "minikin/LayoutPieces.h"
 #include "minikin/Macros.h"
-
-#include "BidiUtils.h"
-#include "LayoutUtils.h"
-#include "LocaleListCache.h"
-#include "MinikinInternal.h"
 
 namespace minikin {
 

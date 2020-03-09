@@ -16,18 +16,17 @@
 
 #include "WordBreaker.h"
 
-#include <list>
-#include <map>
-
 #include <unicode/ubrk.h>
 #include <unicode/uchar.h>
 #include <unicode/utf16.h>
 
-#include "minikin/Emoji.h"
-#include "minikin/Hyphenator.h"
+#include <list>
+#include <map>
 
 #include "Locale.h"
 #include "MinikinInternal.h"
+#include "minikin/Emoji.h"
+#include "minikin/Hyphenator.h"
 
 namespace minikin {
 
@@ -44,7 +43,9 @@ static UBreakIterator* createNewIterator(const Locale& locale) {
 
 ICULineBreakerPool::Slot ICULineBreakerPoolImpl::acquire(const Locale& locale) {
     const uint64_t id = locale.getIdentifier();
+#ifndef WASM_BUILD
     std::lock_guard<std::mutex> lock(mMutex);
+#endif
     for (auto i = mPool.begin(); i != mPool.end(); i++) {
         if (i->localeId == id) {
             Slot slot = std::move(*i);
@@ -61,7 +62,9 @@ void ICULineBreakerPoolImpl::release(ICULineBreakerPool::Slot&& slot) {
     if (slot.breaker.get() == nullptr) {
         return;  // Already released slot. Do nothing.
     }
+#ifndef WASM_BUILD
     std::lock_guard<std::mutex> lock(mMutex);
+#endif
     if (mPool.size() >= MAX_POOL_SIZE) {
         // Pool is full. Move to local variable, so that the given slot will be released when the
         // variable leaves the scope.

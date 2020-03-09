@@ -17,12 +17,14 @@
 #ifndef MINIKIN_LOCALE_LIST_CACHE_H
 #define MINIKIN_LOCALE_LIST_CACHE_H
 
+#ifndef WASM_BUILD
 #include <mutex>
+#endif
+
 #include <unordered_map>
 
-#include "minikin/Macros.h"
-
 #include "Locale.h"
+#include "minikin/Macros.h"
 
 namespace minikin {
 
@@ -60,12 +62,19 @@ private:
         return instance;
     }
 
+#ifndef WASM_BUILD
     std::vector<LocaleList> mLocaleLists GUARDED_BY(mMutex);
 
     // A map from the string representation of the font locale list to the ID.
     std::unordered_map<std::string, uint32_t> mLocaleListLookupTable GUARDED_BY(mMutex);
 
     std::mutex mMutex;
+#else
+    std::vector<LocaleList> mLocaleLists;
+
+    // A map from the string representation of the font locale list to the ID.
+    std::unordered_map<std::string, uint32_t> mLocaleListLookupTable;
+#endif
 };
 
 }  // namespace minikin

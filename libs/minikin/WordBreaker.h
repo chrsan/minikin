@@ -24,15 +24,17 @@
 #define MINIKIN_WORD_BREAKER_H
 
 #include <list>
+
+#ifndef WASM_BUILD
 #include <mutex>
+#endif
 
 #include <unicode/ubrk.h>
 
+#include "Locale.h"
 #include "minikin/IcuUtils.h"
 #include "minikin/Macros.h"
 #include "minikin/Range.h"
-
-#include "Locale.h"
 
 namespace minikin {
 
@@ -77,13 +79,19 @@ protected:
     static constexpr size_t MAX_POOL_SIZE = 4;
     ICULineBreakerPoolImpl(){};  // singleton.
     size_t getPoolSize() const {
+#ifndef WASM_BUILD
         std::lock_guard<std::mutex> lock(mMutex);
+#endif
         return mPool.size();
     }
 
 private:
+#ifndef WASM_BUILD
     std::list<Slot> mPool GUARDED_BY(mMutex);
     mutable std::mutex mMutex;
+#else
+    std::list<Slot> mPool;
+#endif
 };
 
 class WordBreaker {

@@ -18,12 +18,14 @@
 #define MINIKIN_HYPHENATOR_MAP_H
 
 #include <map>
-#include <mutex>
 
-#include "minikin/Hyphenator.h"
-#include "minikin/Macros.h"
+#ifndef WASM_BUILD
+#include <mutex>
+#endif
 
 #include "Locale.h"
+#include "minikin/Hyphenator.h"
+#include "minikin/Macros.h"
 
 namespace minikin {
 
@@ -71,6 +73,7 @@ private:
 
     void clearInternal();
 
+#ifndef WASM_BUILD
     const Hyphenator* lookupByIdentifier(uint64_t id) const EXCLUSIVE_LOCKS_REQUIRED(mMutex);
     const Hyphenator* lookupBySubtag(const Locale& locale, SubtagBits bits) const
             EXCLUSIVE_LOCKS_REQUIRED(mMutex);
@@ -79,6 +82,13 @@ private:
     std::map<uint64_t, const Hyphenator*> mMap GUARDED_BY(mMutex);
 
     std::mutex mMutex;
+#else
+    const Hyphenator* lookupByIdentifier(uint64_t id) const;
+    const Hyphenator* lookupBySubtag(const Locale& locale, SubtagBits bits) const;
+
+    const Hyphenator* mSoftHyphenOnlyHyphenator;
+    std::map<uint64_t, const Hyphenator*> mMap;
+#endif
 };
 
 }  // namespace minikin

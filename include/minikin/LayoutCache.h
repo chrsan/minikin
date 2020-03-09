@@ -19,7 +19,9 @@
 
 #include "minikin/LayoutCore.h"
 
+#ifndef WASM_BUILD
 #include <mutex>
+#endif
 
 #include <utils/LruCache.h>
 
@@ -127,7 +129,9 @@ private:
 class LayoutCache : private android::OnEntryRemoved<LayoutCacheKey, LayoutPiece*> {
 public:
     void clear() {
+#ifndef WASM_BUILD
         std::lock_guard<std::mutex> lock(mMutex);
+#endif
         mCache.clear();
     }
 
@@ -142,7 +146,9 @@ public:
         }
         mRequestCount++;
         {
+#ifndef WASM_BUILD
             std::lock_guard<std::mutex> lock(mMutex);
+#endif
             LayoutPiece* layout = mCache.get(key);
             if (layout != nullptr) {
                 mCacheHitCount++;
@@ -157,13 +163,17 @@ public:
                 std::make_unique<LayoutPiece>(text, range, dir, paint, startHyphen, endHyphen);
         f(*layout, paint);
         {
+#ifndef WASM_BUILD
             std::lock_guard<std::mutex> lock(mMutex);
+#endif
             mCache.put(key, layout.release());
         }
     }
 
     void dumpStats(int fd) {
+#ifndef WASM_BUILD
         std::lock_guard<std::mutex> lock(mMutex);
+#endif
 #ifdef _WIN32
         float ratio = (mRequestCount == 0) ? 0 : mCacheHitCount / (float)mRequestCount;
         int count = _scprintf(
@@ -194,7 +204,9 @@ protected:
     }
 
     uint32_t getCacheSize() {
+#ifndef WASM_BUILD
         std::lock_guard<std::mutex> lock(mMutex);
+#endif
         return mCache.size();
     }
 
@@ -205,7 +217,11 @@ private:
         delete value;
     }
 
+#ifndef WASM_BUILD
     android::LruCache<LayoutCacheKey, LayoutPiece*> mCache GUARDED_BY(mMutex);
+#else
+    android::LruCache<LayoutCacheKey, LayoutPiece*> mCache;
+#endif
 
     int32_t mRequestCount;
     int32_t mCacheHitCount;
@@ -216,7 +232,9 @@ private:
     // number of strings
     static const size_t kMaxEntries = 5000;
 
+#ifndef WASM_BUILD
     std::mutex mMutex;
+#endif
 };
 
 inline android::hash_t hash_type(const LayoutCacheKey& key) {
