@@ -23,13 +23,12 @@
 // #include <log/log.h>
 #include <unicode/unorm2.h>
 
-#include "minikin/Emoji.h"
+#include <cstdlib>
 
 #include "Locale.h"
 #include "LocaleListCache.h"
 #include "MinikinInternal.h"
-
-#include <cstdlib>
+#include "minikin/Emoji.h"
 
 using std::vector;
 
@@ -103,7 +102,9 @@ void FontCollection::init(const vector<std::shared_ptr<FontFamily>>& typefaces) 
     // See the comment in Range for more details.
     /* LOG_ALWAYS_FATAL_IF(mFamilyVec.size() >= 0xFFFF,
                         "Exceeded the maximum indexable cmap coverage."); */
-    abort();
+    if (mFamilyVec.size() >= 0xFFFF) {
+        abort();
+    }
 }
 
 // Special scores for the font fallback.
