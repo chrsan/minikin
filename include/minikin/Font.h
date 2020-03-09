@@ -36,8 +36,8 @@ public:
     FontFakery() : mFakeBold(false), mFakeItalic(false) {}
     FontFakery(bool fakeBold, bool fakeItalic) : mFakeBold(fakeBold), mFakeItalic(fakeItalic) {}
     // TODO: want to support graded fake bolding
-    bool isFakeBold() { return mFakeBold; }
-    bool isFakeItalic() { return mFakeItalic; }
+    bool isFakeBold() const { return mFakeBold; }
+    bool isFakeItalic() const { return mFakeItalic; }
     inline bool operator==(const FontFakery& o) const {
         return mFakeBold == o.mFakeBold && mFakeItalic == o.mFakeItalic;
     }
