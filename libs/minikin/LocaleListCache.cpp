@@ -18,6 +18,7 @@
 
 #include "LocaleListCache.h"
 
+#include <string>
 #include <unordered_set>
 
 // #include <log/log.h>
@@ -50,9 +51,21 @@ static size_t toLanguageTag(char* output, size_t outSize, const StringPiece& loc
     }
 
     // Preserve "und" and "und-****" since uloc_addLikelySubtags changes "und" to "en-Latn-US".
+    /*
     if (strncmp(output, "und", 3) == 0 &&
         (outLength == 3 || (outLength == 8 && output[3] == '_'))) {
         output[3] = '-';  // to be language tag.
+        return outLength;
+    }
+    */
+
+    // Preserve "" and "_****" since uloc_addLikelySubtags changes "" to "en_Latn_US".
+    if (outLength == 0 || (outLength == 5 && output[0] == '_')) {
+        if (output[0] == '_') {
+            output[0] = '-';
+        }
+        std::string buf(output, outLength);
+        outLength = (size_t)snprintf(output, outSize, "und%s", buf.c_str());
         return outLength;
     }
 
