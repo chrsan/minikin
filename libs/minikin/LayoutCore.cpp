@@ -20,6 +20,7 @@
 
 #include <hb-icu.h>
 #include <hb-ot.h>
+#include <sys/types.h>
 
 #include <cmath>
 #include <iostream>

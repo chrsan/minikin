@@ -18,14 +18,14 @@
 
 #include "BidiUtils.h"
 
-#include <algorithm>
-
+#include <sys/types.h>
 #include <unicode/ubidi.h>
 #include <unicode/utf16.h>
 
-#include "minikin/Emoji.h"
+#include <algorithm>
 
 #include "MinikinInternal.h"
+#include "minikin/Emoji.h"
 
 namespace minikin {
 

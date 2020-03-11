@@ -16,6 +16,8 @@
 
 #include "minikin/GraphemeBreak.h"
 
+#include <sys/types.h>
+
 #include <algorithm>
 #include <cstdint>
 

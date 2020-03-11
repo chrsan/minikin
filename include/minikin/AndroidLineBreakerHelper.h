@@ -17,6 +17,8 @@
 #ifndef MINIKIN_ANDROID_LINE_BREAKER_HELPERS_H
 #define MINIKIN_ANDROID_LINE_BREAKER_HELPERS_H
 
+#include <sys/types.h>
+
 #include <algorithm>
 
 #include "minikin/LineBreaker.h"

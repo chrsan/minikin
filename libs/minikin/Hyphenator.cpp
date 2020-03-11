@@ -16,13 +16,14 @@
 
 #include "minikin/Hyphenator.h"
 
+#include <sys/types.h>
+#include <unicode/uchar.h>
+#include <unicode/uscript.h>
+
 #include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
-
-#include <unicode/uchar.h>
-#include <unicode/uscript.h>
 
 #include "minikin/Characters.h"
 

@@ -23,6 +23,8 @@
 #ifndef MINIKIN_WORD_BREAKER_H
 #define MINIKIN_WORD_BREAKER_H
 
+#include <sys/types.h>
+
 #include <list>
 
 #ifndef WASM_BUILD
